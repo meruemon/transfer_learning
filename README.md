@@ -8,8 +8,8 @@
 $ cd ~
 $ mkdir Programs
 $ cd Programs
-$ git clone
-$ cd CBIR
+$ git clone https://github.com/meruemon/transfer_learning.git
+$ cd transfer_learning
 ```
 
 ログインユーザのIDを確認し，`docker/Dockerfile`46行目の`UID`に表示された番号を設定する．
