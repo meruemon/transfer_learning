@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+    <div class="row">
+
+        <div class="col-xs-8">
+            <div class="row" id="keyword-search-results"></div>
+            <div>
+                <ul id="pagination-main" class="pagination"></ul>
+            </div>
+
+            <div id="div__query"></div>
+        </div>
+
+        <div class="col-xs-4">
+            <div class="row" id="reranking-button">
+                <div class="col text-center">
+                    <div class="col-xs-2">
+                        <button type="submit" class="btn btn-success" name="reranking" id="reranking" value="リランキング">
+                            リランキング
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <section class="image-row">
+            <table class="table" id="results-table">
+                <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Score</th>
+                </tr>
+                </thead>
+                <tbody id="results">
+                </tbody>
+            </table>
+            <div>
+                <ul id="pagination" class="pagination"></ul>
+            </div>
+            </section>
+        </div>
+
+    </div>
+
+    <br>
+
+{% endblock %}

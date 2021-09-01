@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{% if keyword %}
+<h3>「{{keyword}}」の類似画像検索結果...</h3>
+<br>
+    {%  if scores %}
+        <div class="row">
+            <div class="col text-center">
+                <div class="col-xs-2">
+                    <button class="btn btn-success" name="reranking" id="reranking" value="リランキング">リランキング</button>
+                </div>
+            </div>
+        </div></br>
+        {% for score in scores%}
+        <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+        <img src="{{ score[0] }}" height="150px" class="img" id={{ score[1] }}>
+        <figcaption>{{ score[1] }}</figcaption>
+        </figure>
+        {% endfor %}
+    {% else %}
+        <p>そのキーワードを持つ商品はありませんでした．</p>
+    {% endif %}
+</ul>
+{% else %}
+<p>キーワードを入れて検索ボタンを押して下さいよ.</p>
+{% endif %}
+
+{% endblock %}
+
