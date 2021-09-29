@@ -128,3 +128,71 @@ python keras_to_tensorflow.py --input_model "${OUTPUT_MODEL}/saved_model_${EPOCH
                               --output_model "${OUTPUT_MODEL}/freezed_model_${EPOCHS}.pb"
 ```
 
+## 特徴量抽出
+
+画像から画像特徴量と呼ばれる特徴量ベクトルを抽出し，機械学習手法を用いて画像認識を実現する手法が主流となった．
+機械学習は，クラスラベルを付与した大量の学習サンプルを必要とするが，ルールベースの手法のように研究者がいくつかのルールを設計する
+必要がないため，汎用性の高い画像認識を実現できる．2000年代になると，画像特徴量としてScale-Invariant Feature Transform (SIFT)
+やHistogram of Oriented Gradients (HOG) のように研究者の知見に基づいて設計した特徴量が盛んに研究されていた． 
+このように設計された特徴量は**handcrafted feature**と呼ばれる．そして，2010年代では学習により特徴抽出過程を自動獲得する
+深層学習 (Deep learning) か登場した．handcrafted featureは，研究者の知見に基づいて設計したアルゴリズムにより特徴量を
+抽出・表現していたため最適であるとは限らない．
+深層学習は，認識に有効な特徴量の抽出処理を自動化することができる新しいアプローチである．
+
+
+深層学習で用いられるニューラルネットワークは分類器だけではなく，特徴抽出器としての有用性が知られている．
+具体的に， ネットワークの中間層から出力されたベクトルを特徴量とみなして，**Deep feature**と呼ばれる．
+
+
+事前学習済み深層ニューラルネットワークInception-V3を使用してDeep featureを抽出する手順を述べる．
+
+
+### 実行
+
+`run_incv3_features_extraction.sh`が画像特徴量を抽出するシェルスクリプトである．
+次のコマンドを入力するとプログラムが実行される．
+
+```bash
+$ sh run_incv3_features_extraction.sh
+```
+
+中身は以下の通りである．実行されるpythonコードは`process_images.py`と`process_images_v2`の2つである．
+４行目から15行目の変数`IMAGES_DIR`，`MODEL_DIR`，`FINETUNED_MODEL_DIR`，`FINETUNED_MODEL_NAME`，`OUTPUT_DIR`，`FINETUNED_OUTPUT_DIR`は
+パラメータである．特に，`IMAGES_DIR`に保存されている画像を対象に，画像特徴量を抽出するため，ここに指定したフォルダの中に
+画像が存在しないと特徴量は抽出されない．`FINETUNED_MODEL_DIR`には，ファインチューニング後に生成された重みパラメータファイル`**.pb`が
+保存されているフォルダを指定する．抽出された特徴量は，画像ファイル名を含むファイル名で`OUPUT_DIT`と`FINETUNED_OUTPUT_DIR`に
+保存される．
+
+```shell
+#!/bin/bash
+
+# 特徴抽出対象の画像が保存されたフォルダ（自分の環境に合わせて変更）
+IMAGES_DIR="/home/yoshida/Programs/e-kikai/transfer_learning/CBIR/utils/static/img"
+# ImageNetで学習されたパラメータを保存するフォルダ（変更する必要なし）
+MODEL_DIR="./saved_models/inception_v3"
+# ファインチューニングしたパラメータを保存したフォルダ（自分の環境に合わせて変更）
+FINETUNED_MODEL_DIR="./saved_models/20210828"
+# ファインチューニングしたパラメータのファイル名
+# FINETUNED_MODEL_DIRで指定したフォルダの中に保存されているファイル名と一緒にする
+FINETUNED_MODEL_NAME="freezed_model_50.pb"
+# 画像特徴ベクトルを保存するフォルダ（自分の環境に合わせて変更）
+OUTPUT_DIR="./static/vectors"
+# ファインチューンされた画像特徴ベクトルを保存するフォルダ（自分の環境に合わせて変更）
+FINETUNED_OUTPUT_DIR="./static/finetuned_vectors"
+
+# saved_modelsの中に重みパラメータを保存するフォルダを作成
+mkdir -p ${MODEL_DIR}
+# 画像特徴ベクトルを保存するフォルダを作成
+mkdir -p ${OUTPUT_DIR}
+mkdir -p ${FINETUNED_OUTPUT_DIR}
+
+# 画像特徴抽出を行う（ファインチューニング無）
+python process_images.py --model_dir "${MODEL_DIR}" --image_files "${IMAGES_DIR}" --output_folder "${OUTPUT_DIR}"
+
+# 画像特徴抽出を行う（ファインチューニング有）
+python process_images_v2.py --model_dir "${FINETUNED_MODEL_DIR}" --image_files "${IMAGES_DIR}"\
+                            --output_folder "${FINETUNED_OUTPUT_DIR}" --model_name "${FINETUNED_MODEL_NAME}"
+```
+
+一度の実行で，`process_images.py`と`process_images_v2.py`の両方が実行されるので，不要であれば
+どちらか一方の該当行をコメントアウトする．
