@@ -52,8 +52,6 @@ IMG_CHANNEL_V3 = 3
 
 types = ['jpg', 'JPG', 'jpeg', 'JPEG']
 
-_MODEL_NAME = '20210828/freezed_model_50.pb'
-
 class FeatureExtractor:
     def __init__(self, image_glob):
         print(' * writing outputs for ' + str(len(image_glob)) +
