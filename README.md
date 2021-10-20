@@ -196,3 +196,69 @@ python process_images_v2.py --model_dir "${FINETUNED_MODEL_DIR}" --image_files "
 
 一度の実行で，`process_images.py`と`process_images_v2.py`の両方が実行されるので，不要であれば
 どちらか一方の該当行をコメントアウトする．
+
+## 類似画像検索
+
+類似画像検索は，画像から画像特徴量を抽出し，クエリ画像と類似した特徴を持つ画像をデータベースから
+検索する技術である．
+
+### 準備
+
+検索を行う対象の全画像から予め画像特徴量を抽出する．ここでは，前項で抽出したInception v3から得たベクトルを
+画像特徴量として用いる．前項に記載のままであると，画像特徴量は`OUTPUT_DIR`及び`FINETUNED_OUTPUT_DIR`に指定した
+フォルダに保存されている．たとえば，`./static/finetuned_vectors`の中に存在する`**.npy`が画像特徴ベクトルが
+保存されたファイルである．
+
+まず，抽出した画像特徴ベクトルが保存されたフォルダを所定の場所に移動する．上記の`vectors`及び`finetuned_vectors`を
+`CBIR/utils/static`にドラックアンドドロップなどで移動する．
+
+次に，
+
+### 設定
+
+`CBIR/utils/config.py`を開く
+
+```python
+DEBUG = True
+SECRET_KEY = 'secret key'
+VALID_CSV = 'utils/static/csv/tools.csv'
+VECTORS_DIR = 'static/vectors'
+```
+
+上記のうち，`VECTORS_DIR`を変更する．`static/vectors`であれば，**ファインチューニング無**の画像特徴量，
+`static/finetuned_vectors`であれば，**ファインチューニング有**の画像特徴量を使用した類似画像検索を行うことになる．
+ただし，いずれのフォルダ名は，上記準備の項で移動したフォルダと対応している点に注意し，必ずフォルダとその中身が存在
+することを確認すること．
+
+### 検索システムの起動
+
+類似画像検索システムはPythonで実装されており，特にWebアプリケーションとして動かすために，インターフェイスは
+Flaskライブラリを用いている．システムを起動するために，起点となるのが，`server.py`である．
+`server.py`が存在するフォルダに移動して，次のコマンドを入力して，システムを立ち上げる．
+
+```bash
+$ python server.py
+```
+
+正常に立ち上がると，以下のような表示される．
+
+```bash
+* Serving Flask app 'utils' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://172.20.0.2:5000/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 101-591-421
+```
+
+この状態を保持したまま，Google Chromeなどのブラウザの検索欄に次のアドレスを入力する．
+
+```
+127.0.0.1:5000
+```
+
