@@ -220,11 +220,11 @@ python process_images_v2.py --model_dir "${FINETUNED_MODEL_DIR}" --image_files "
 DEBUG = True
 SECRET_KEY = 'secret key'
 VALID_CSV = 'utils/static/csv/tools.csv'
-VECTORS_DIR = 'static/vectors'
+VECTORS_DIR = 'vectors'
 ```
 
-上記のうち，`VECTORS_DIR`を変更する．`static/vectors`であれば，**ファインチューニング無**の画像特徴量，
-`static/finetuned_vectors`であれば，**ファインチューニング有**の画像特徴量を使用した類似画像検索を行うことになる．
+上記のうち，`VECTORS_DIR`を変更する．`vectors`であれば，**ファインチューニング無**の画像特徴量，
+`finetuned_vectors`であれば，**ファインチューニング有**の画像特徴量を使用した類似画像検索を行うことになる．
 ただし，いずれのフォルダ名は，上記準備の項で移動したフォルダと対応している点に注意し，必ずフォルダとその中身が存在
 することを確認すること．
 
