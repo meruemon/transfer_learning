@@ -176,9 +176,9 @@ FINETUNED_MODEL_DIR="./saved_models/20210828"
 # FINETUNED_MODEL_DIRで指定したフォルダの中に保存されているファイル名と一緒にする
 FINETUNED_MODEL_NAME="freezed_model_50.pb"
 # 画像特徴ベクトルを保存するフォルダ（自分の環境に合わせて変更）
-OUTPUT_DIR="./static/vectors"
+OUTPUT_DIR="./CBIR/utils/static/vectors"
 # ファインチューンされた画像特徴ベクトルを保存するフォルダ（自分の環境に合わせて変更）
-FINETUNED_OUTPUT_DIR="./static/finetuned_vectors"
+FINETUNED_OUTPUT_DIR="./CBIR/utils/static/finetuned_vectors"
 
 # saved_modelsの中に重みパラメータを保存するフォルダを作成
 mkdir -p ${MODEL_DIR}
@@ -211,8 +211,6 @@ python process_images_v2.py --model_dir "${FINETUNED_MODEL_DIR}" --image_files "
 
 まず，抽出した画像特徴ベクトルが保存されたフォルダを所定の場所に移動する．上記の`vectors`及び`finetuned_vectors`を
 `CBIR/utils/static`にドラックアンドドロップなどで移動する．
-
-次に，
 
 ### 設定
 
